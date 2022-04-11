@@ -4,7 +4,7 @@ import { getForm,createForm,updateForm,deleteForm } from '../controllers/form.js
 
 const router = express.Router()
 router.get("/",getForm)
-// router.post("/",upload.single("resume"),createForm)
+router.post("/",createForm)
 router.patch("/:id",updateForm)
 router.delete("/:id",deleteForm)
 

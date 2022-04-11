@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import form from "./ROutes/form.js";
 import multer from "multer";
-import formDetails from "./models/form.js";
+import formDetails from "./models/form.js"
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, "./uploads");
@@ -13,35 +13,27 @@ const storage = multer.diskStorage({
     callback(null, file.originalname);
   },
 });
+
 export const upload = multer({
   storage: storage,
 });
-
 const app = express();
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
+app.post("/form",upload.single("resume"),async(req,res)=>{
+  // console.log(req.body)
+   const newForm = new formDetails(req.body); // adds the data to existing table
+  try{
+      await newForm.save();// saves table
+      res.status(200).json(newForm); // return the new table
+  }
+  catch(error) {
+      res.status(404).json({message: error.message});
+  }
+})
 
 
-app.post("/form", upload.single("resume"), (req, res) => {
-  const newform = new formDetails({
-    fullname: req.body.fullname,
-    phonenum: req.body.phonenum,
-    email: req.body.email,
-    university: req.body.university,
-    aboutyou: req.body.aboutyou,
-    skills: req.body.skills,
-    intersted: req.body.intersted,
-    others: req.body.others,
-    resume: req.body.resume,
-  });
-  newform
-    .save()
-    .then(() => {
-      res.json("response submitted successfully");
-    })
-    .catch((error) => console.log(error.message));
-});
 app.use("/form", form);
 // mongoose connection
 

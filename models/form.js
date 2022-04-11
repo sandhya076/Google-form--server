@@ -9,7 +9,7 @@ const workSchema = mongoose.Schema({
     skills : String,
     intersted :Array,
     others:String,
-    resume:String,
+    resumeName:String,
 })
 
 const formDetails = mongoose.model("formDetails",workSchema)

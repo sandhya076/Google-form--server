@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import formDetails from "../models/form.js";
-import { upload } from "../index.js";
 
 
 export const getForm = async (req, res) => {
@@ -14,37 +13,17 @@ export const getForm = async (req, res) => {
 
 export const createForm = async (req, res) => {
   const form = req.body; // stores data given by client
-  // const newForm = new formDetails(form); // adds the data to existing table
-  // try{
-  //     await newForm.save();// saves table
-  //     res.status(200).json(newForm); // return the new table
-  // }
-  // catch(error) {
-  //     res.status(404).json({message: error.message});
+  const newForm = new formDetails(form); // adds the data to existing table
+  try{
+      await newForm.save();// saves table
+      res.status(200).json(newForm); // return the new table
+  }
+  catch(error) {
+      res.status(404).json({message: error.message});
 
-  // }
-  upload(req, res, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      const newForm = new formDetails({
-        ...form,
-        resume: {
-          data: form.textImage.filename,
-          contentType: "image/png",
-        },
-      });
-      newForm
-        .save()
-        .then(() => {
-          res.send("Successfully uploaded");
-        })
-        .catch((error) => {
-          res.send(error.message);
-        });
-    }
-  });
+  }
 };
+
 
 export const updateForm = async (req, res) => {
   const { id: id } = req.params;
